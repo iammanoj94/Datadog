@@ -1,0 +1,21 @@
+            Splunk Linux Manual Installation
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#cp splunkforwarder-9.0.4-de405f4a7979-Linux-x86_64\ \(1\).tgz /opt/
+# cd /opt
+# tar -zxvf splunkforwarder-9.0.4-de405f4a7979-Linux-x86_64\ \(1\).tgz
+# useradd -m splunkfwd
+# groupadd splunkfwd
+# cd /opt/splunkforwarder/etc/apps/
+# cp /var/tmp/br_bisg_deploymentclient\ \(2\).zip .
+# unzip  br_bisg_deploymentclient\ \(2\).zip
+# chown -R splunkfwd:splunkfwd splunkforwarder
+# cd br_bisg_deploymentclient/local
+# vi deploymentclient.conf
+ [deployment-client]
+                                          disabled = false
+                                          [target-broker:deploymentServer]
+                                          targetUri = 10.26.12.106:8089
+                                          phoneHomeIntervalInSecs=1200
+#cd /opt/splunkforwarder/bin
+#./splunk start
+#ps -ef |grep splunk
