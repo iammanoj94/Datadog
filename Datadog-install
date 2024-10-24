@@ -1,0 +1,206 @@
+Created by Khatib, Ajmeena, last modified on Sep 20, 2024
+
+Access Request Process:-
+Debug agent collection : 
+Access Request Process:-
+Users need to Submit a Service Request to get the access.
+
+1. Go to https://brhelix-dwp.onbmc.com/dwp/app/#/catalog
+
+2. Select "Request Something", following by "Security Group"
+
+3. Select one of the following SGs to have your ID added (as applicable) 
+
+example:
+
+AD Security Group
+
+Datadog Sub-Organization
+
+Monitoring_GTO
+
+Broadridge (GTO), Broadridge (GTO-dev)
+
+
+
+Once the request is approved, it might take up to 24 hours to get access.
+
+
+
+
+
+Datadog is organized into 3 standard sub-orgs, broken up by 2 Regions (US and EU). 
+
+US Region Sub-Orgs : 
+
+Broadridge (GTO) - https://app.datadoghq.com/account/login/id/yewg8wz65oxs9xaf 
+       2. Broadridge (GTO-dev) - https://app.datadoghq.com/account/login/id/xetnvhh7dy090t1j
+
+EU Region Sub-Orgs : 
+
+       3. BroadridgeEU (GlobalProxyVote)
+
+The dev level account contains dev data, while the main account contains everything else (QA, Prod, DR, UAT). Dev is read/write, and the main account is read only for standard users. 
+
+The agent can be either pushed out from BladeLogic, or installed using the Chef cookbook here. SRE teams or app teams who has access to BladeLogic has to run the job and install the agent. EU servers are onboarded by Kyndryl team using Ansible. 
+
+Monitoring team is not responsible to install DD agent on servers. 
+
+Note: Going forward all servers needs to be onboarded only in GTO\GTO-dev sub-org irrespective of the BU division. And EU servers to be onboarded in EU(GlobalProxyVote) sub-org. All other sub-orgs apart from above 3 will be decommissioned soon and Monitoring team will be reaching out to each team to have the servers migrated to respective standard sub-orgs. 
+
+
+
+Network Requirements:-
+
+https://docs.datadoghq.com/agent/guide/network/?tab=agentv6v7
+
+
+
+Install steps for US region sub-orgs:
+
+Within BladeLogic, under Jobs → Datadog → GTO folder, you will find all the required jobs.
+
+
+
+
+
+
+   2. Team needs to execute any one of the below jobs depending on the Datacenter, OS and Environment to install and configure DD agent -
+
+
+
+Windows	Development	EDG	DDAgent_Win_GTOdev_EDG_Proxy
+Windows 	Development 	CLF 	DDAgent_Win_GTOdev_CLF_Proxy
+Windows 	Development 	COL	DDAgent_Win_GTOdev_COLprxy
+Windows 	QA/UAT/PROD/DR	EDG	DDAgent_Win_GTO_EDG_Proxy
+Windows	QA/UAT/PROD/DR	CLF	DDAgent_Win_GTO_CLF_Proxy
+Windows	QA/UAT/PROD/DR	COL	DDAgent_Win_GTO_COLprxy
+Linux - RHEL 7 and Higher ver	Development	EDG	DDAgent_RHEL_GTOdev_EDG_Proxy
+Linux - RHEL 7 and Higher ver	Development 	COL	DDAgent_RHEL_GTOdev_COLproxy
+Linux - RHEL 7+ and Higher ver	Development	CLF	DDAgent_RHEL_GTOdev_CLF_Proxy
+Linux - RHEL 7+and Higher ver	QA/UAT/PROD/DR	EDG	DDAgent_RHEL_GTO_EDG_Proxy
+Linux - RHEL 7+ and Higher ver	QA/UAT/PROD/DR	CLF	DDAgent_RHEL_GTO_CLF_Proxy
+Linux - RHEL 7+ and Higher ver	QA/UAT/PROD/DR	COL	DDAgent_RHEL_GTO_COLproxy
+Linux - RHEL 6 	Development	EDG	DDAgent_RHEL6_GTOdev_EDG_Proxy
+Linux - RHEL 6 	Development	CLF	DDAgent_RHEL6_GTOdev_CLF_Proxy
+Linux - RHEL 6	QA/UAT/PROD/DR	EDG	DDAgent_RHEL6_GTO_EDG_Proxy
+Linux - RHEL 6 	QA/UAT/PROD/DR	CLF	DDAgent_RHEL6_GTO_CLF_Proxy
+Debian	Development	EDG	DDAgent_Debian_GTOdev_EDG_Proxy
+Debian	Development	CLF	DDAgent_Debian_GTOdev_CLF_Proxy
+Debian	QA/UAT/PROD/DR	EDG	DDAgent_Debian_GTO_EDG_Proxy
+Debian	QA/UAT/PROD/DR	CLF	DDAgent_Debian_GTO_CLF_Proxy
+AIX 7.1	Development	EDG	DDAgent_AIX7.1_GTOdev_CLFprxy
+AIX 7.1	Development 	CLF 	DDAgent_AIX7.1_GTOdev_CLFprxy
+AIX 7.1	QA/UAT/PROD/DR	EDG	DDAgent_AIX7.1_GTO_EDGprxy
+AIX 7.1	QA/UAT/PROD/DR	CLF 	DDAgent_AIX7.1_GTO_CLFprxy
+AIX 7.2	Development	EDG	DDAgent_AIX7.2_GTOdev_EDGprxy
+AIX 7.2	Development 	CLF 	DDAgent_AIX7.2_GTOdev_CLFprxy
+AIX 7.2	QA/UAT/PROD/DR	EDG	DDAgent_AIX7.2_GTO_EDGprxy
+AIX 7.2	QA/UAT/PROD/DR	CLF 	DDAgent_AIX7.2_GTO_CLFprxy
+
+
+To install DD agent on AIX 6.1 servers, please follow manual install - Install Datadog Agent on AIX servers
+
+Pick the relevant job and push it to your servers. The Datadog agent has versions compatible with Windows, RHEL, AIX, and more - with the exception of Solaris. For any servers not on RHEL or Windows, the agent must be deployed manually - please see this page for instructions specific to your OS. 
+
+
+
+Agent Requirements:
+
+Connectivity - The agent needs to connect to the internet. EC2s in AWS should already have connectivity to the required address. If you're unsure if your host has access, try the following:
+
+RHEL	telnet app.datadoghq.com 443
+Windows	TRACERT app.datadoghq.com
+
+
+Network Requirements : https://docs.datadoghq.com/agent/guide/network/?tab=agentv6v7 
+
+Supported OS Platforms : https://docs.datadoghq.com/agent/supported_platforms/?tab=linux
+
+
+
+If you don't have connectivity from your host, you'll need to connect to a proxy. In Edgewood and Clifton, there are bluecoat proxies that you can use for this purpose. To request access, submit a request to the networking team. (Sample ticket: REQ000000414170)
+
+#EDG
+proxy:
+https: http://10.157.130.13:8080
+http: http://10.157.130.13:8080
+
+#CLF
+proxy:
+https: http://10.98.127.47:8080
+http: http://10.98.127.47:8080
+
+#EU
+proxy:
+ https: http://10.194.181.118:8080
+ http: http://10.194.181.118:8080
+
+#For columbus DC with 10.170.* ip's use below if #CLF proxy does not work:
+proxy:
+  https: http://149.83.200.42:8080
+  http: http://149.83.200.42:8080
+
+
+
+If you're leveraging a proxy, you'll need to add the above snippet into the main config file within the agent, located in /etc/datadog-agent/datadog.yaml in RHEL servers. For Windows, you can open the management console through the start menu (search for Datadog) and edit the configuration through there. 
+
+Once done, host will start reporting in DD console. 
+
+Debug agent collection : 
+When an agent is not reporting into the Datadog console, there are a few common break points to check first. 
+
+Determine if the agent is running: This can be done by running 'datadog-agent status' on UNIX hosts, or confirming that the Datadog agent process is running on a Windows host. 
+Check connection: You can determine if the agent is communicating with Datadog by running either 'datadog-agent status' on a UNIX box or opening the status page in the Datadog Agent Manager in Windows. Note that admin permissions are needed to open the Datadog agent manager. If either host says that the API key is invalid, this is a sign that there's no connection to Datadog. This can be tested by running telnet or TRACERT to the proxy in question on port 8080. Just because it can hit the proxy doesn't mean it's whitelisted on the proxy, however - if the rest of the steps below are performed and the agent still isn't connecting, it's likely that the host needs to be whitelisted on the bluecoat proxy by the Networking team. No proxy is needed for hosts in AWS. 
+Confirm that the API key matches the destination acct: The suborg that an agent sends data to is governed by the API key in the main config file. In UNIX hosts, this is /etc/datadog-agent/datadog.yaml. In Windows, it can either be found in the config section of the Agent Manager, or in \\C:ProgramData\Datadog\datadog.yaml. The destination API key can be found by logging into the suborg in question and going to Infrastructure > API. If you're unsure on where the agent should be pointing, see 'Suborg Organization' above. 
+If the agent won't start or crashes shortly after starting, check the logs - /var/log/datadog/agent.log for UNIX, C:\ProgramData\Datadog\logs for Windows. A common problem is that there's a port conflict - in this case, determine the port where the conflict is occurring and search out the main config file for that number. Select an unused port and restart the agent (systemctl restart datadog-agent or by using the Windows Datadog Agent Manager). 
+
+
+System - 
+
+CPU: ~ 0.12% of the CPU used on average
+Memory: ~ 60MB of RAM used (RSS memory)
+Network bandwidth: ~ 86 B/s ▼ | 260 B/s ▲
+Disk:
+Linux 350MB to 400MB depending on the distribution
+Windows: 260MB
+Alerts configuration :  https://confluence.broadridge.net/x/_YjGDg
+
+
+
+Manual Install steps for EU region sub-org:
+
+Users have to configure the DataDog agent on EU servers manually. Please follow below steps -
+
+     Step 1: To install agent, run the below command -
+
+                  yum -y install https://nexus.devops.broadridge.net/artifactory/datadog-agent-cache/datadog-agent-7.49.1-1.x86_64.rpm
+
+     Step 2 : Configure the agent (This needs root permission to edit)
+
+                  sudo su -
+
+                  cd /etc/datadog-agent/
+
+                  vi datadog.yaml 
+
+In the datadog.yaml file, you need to update 3 parameters (Api_key, Site and Proxy settings)
+
+                 api_key:  Reach out to DataDog Admin's (Ajmeena Khatib  or Manikantachari Kurabalakota) over Teams chat to get the API key. And update the key in api_key section of the file (Please make sure to give a space post colon and then paste the key). 
+
+                       
+
+
+
+                 Site:  Uncomment site parameter and update the value to "datadoghq.eu"
+
+                       
+
+
+
+                  Proxy: Paste below proxy settings in a new line. Format should be as it is shown in the screenshot. 
+
+                         #EU
+                         proxy:
+                            https: http://10.194.181.118:8080
+                            http: http://10.194.181.118:8080
